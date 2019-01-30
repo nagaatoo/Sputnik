@@ -1,0 +1,6 @@
+<configuration>
+    <appender name="map" class="com.numbDev.Sputnik.BackLog.MapAppender"/>
+    <root level="info">
+        <appender-ref ref="map"/>
+    </root>
+</configuration>

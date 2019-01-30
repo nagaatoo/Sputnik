@@ -1,0 +1,9 @@
+applications:
+  - name: Sputnik
+    buildpack: https://github.com/cloudfoundry/java-buildpack.git
+    instances: 1
+    random-route: false
+    path: C:\Users\nnaga\Documents\NumbDev\Sputnik\target\Sputnik-0.0.1-SNAPSHOT.jar
+properties:
+  - endpoint:
+      port: 8088
