@@ -6,6 +6,3 @@ applications:
     path: C:\Users\nnaga\Documents\NumbDev\Sputnik\Sputnik\target\Sputnik-0.0.1-SNAPSHOT.jar
     services:
       - sputnik-db
-properties:
-  - endpoint:
-      port: 8088

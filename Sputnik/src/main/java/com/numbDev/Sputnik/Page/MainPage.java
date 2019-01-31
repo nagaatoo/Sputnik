@@ -3,8 +3,6 @@ package com.numbDev.Sputnik.Page;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import com.numbDev.Sputnik.BackLog.MapAppender;
-import com.numbDev.Sputnik.Beep.BeepEvent;
-import com.numbDev.Sputnik.Beep.BeepEventPublisher;
 import com.numbDev.Sputnik.DB.DBService;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
@@ -15,33 +13,26 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.sql.SQLException;
 
-//import com.numbDev.Sputnik.DB.DBService;
-
 @Theme("valo")
 @SpringUI
 @EnableScheduling
 @Push
-public final class MainPage extends UI implements IBeep {
+public final class MainPage extends UI {
 
     private MapAppender appender;
     private static Logger logger = (Logger) LoggerFactory.getLogger(MainPage.class);
 
     private TextArea area = new TextArea();
     private TextArea log = new TextArea();
-    private final SimpMessagingTemplate template;
-    private final BeepEventPublisher publisher;
     private final DBService dbService;
     private StringBuilder logString = new StringBuilder();
 
-    public MainPage(SimpMessagingTemplate template, BeepEventPublisher beepEventPublisher, DBService dbService) {
-        this.template = template;
-        this.publisher = beepEventPublisher;
+    public MainPage(DBService dbService) {
         this.dbService = dbService;
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         appender = (MapAppender) context.getLogger("ROOT").getAppender("map");
@@ -69,36 +60,24 @@ public final class MainPage extends UI implements IBeep {
         this.setContent(vlRoot);
     }
 
-    public void makeBeep() {
+    // Dirty hack
+    private void makeBeep() {
         String text = area.getValue();
-        area.setValue(text + "\n beep!");
+        area.setValue(text + "\n Beeeep!");
     }
-
-//    @Scheduled(cron = "*/5 * * * * *")
-//    private void gPoint() {
-//        System.out.println(message);
-//        this.access(() -> area.setValue(area.getValue() + message + "\n" ));
-//        try {
-//            template.convertAndSend("/topic/Beep", message);
-//        } catch (MessagingException e) {
-//            logger.error(e.getMessage());
-//        }
-//    }
 
     @Scheduled(cron = "*/1 * * * * * ")
     private void logger() throws SQLException {
         logString.setLength(0);
-        //appender.getEventMap().forEach(l -> logString.append("\n").append(l));
-        String text = "Список партийных товарищей:\n";
+        StringBuilder text = new StringBuilder("Список товарищей, услышавших эхо мощи коммунизма:\n");
+        text.append("------------------------------\n\n");
         for (String user : dbService.getBeepUsers()) {
-            text += user + "\n";
+            text.append(user).append("\n");
         }
-        String finalText = text;
-        this.access(() -> log.setValue(finalText));
-       // publisher.publishEvent("yolo");
-    }
-
-    public void beepListerenPub(final BeepEvent event) {
+        this.access(() -> {
+            log.setValue(text.toString());
+            makeBeep();
+        });
     }
 }
 

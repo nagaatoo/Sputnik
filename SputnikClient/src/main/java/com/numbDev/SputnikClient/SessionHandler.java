@@ -27,6 +27,6 @@ public class SessionHandler extends StompSessionHandlerAdapter {
                 count += 1;
             }
         });
-        session.send("/app/test", "nagatoo");
+        session.send("/app/test", "Чистый капиталист из Мемфиса");
     }
 }

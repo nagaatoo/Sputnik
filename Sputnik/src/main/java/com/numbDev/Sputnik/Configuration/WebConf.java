@@ -18,19 +18,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSocketMessageBroker
-//@Profile("cloud")
 public class WebConf implements WebSocketMessageBrokerConfigurer {
-
-//    private WebSockHandler handler;
-//
-//    public WebConf(WebSockHandler webSockHandler) {
-//        this.handler = webSockHandler;
-//    }
-//
-//    @Override
-//    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-//        webSocketHandlerRegistry.addHandler(handler, "/testHandler");
-//    }
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration webSocketTransportRegistration) {
@@ -64,7 +52,7 @@ public class WebConf implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         RequestUpgradeStrategy upgradeStrategy = new TomcatRequestUpgradeStrategy();
-        registry.addEndpoint("/portfolio").setHandshakeHandler(new DefaultHandshakeHandler(upgradeStrategy))
+        registry.addEndpoint("/lenin").setHandshakeHandler(new DefaultHandshakeHandler(upgradeStrategy))
                 .setAllowedOrigins("*");
     }
 

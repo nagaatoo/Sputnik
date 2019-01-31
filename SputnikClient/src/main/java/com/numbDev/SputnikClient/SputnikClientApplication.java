@@ -20,12 +20,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SputnikClientApplication {
 
 	public	static void main(String[] args) throws ExecutionException, InterruptedException {
-		ApplicationContext context = SpringApplication.run(SputnikClientApplication.class, args);
+		SpringApplication.run(SputnikClientApplication.class, args);
 
 		WebSocketClient webSocketClient = new StandardWebSocketClient();
 		WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
 		stompClient.setMessageConverter(new StringMessageConverter());
-		String url = "wss://sputnik.cfapps.io:4443/portfolio";
+		String url = "wss://sputnik.cfapps.io:4443/lenin";
 		StompSessionHandler sessionHandler = new SessionHandler();
 		StompSession session = stompClient.connect(url, sessionHandler).get();
 	}
