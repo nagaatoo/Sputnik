@@ -5,6 +5,7 @@ import ch.qos.logback.classic.LoggerContext;
 import com.numbDev.Sputnik.BackLog.MapAppender;
 import com.numbDev.Sputnik.Beep.BeepEvent;
 import com.numbDev.Sputnik.Beep.BeepEventPublisher;
+import com.numbDev.Sputnik.DB.DBService;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
@@ -17,6 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import java.sql.SQLException;
+
+//import com.numbDev.Sputnik.DB.DBService;
 
 @Theme("valo")
 @SpringUI
@@ -31,12 +36,13 @@ public final class MainPage extends UI implements IBeep {
     private TextArea log = new TextArea();
     private final SimpMessagingTemplate template;
     private final BeepEventPublisher publisher;
+    private final DBService dbService;
     private StringBuilder logString = new StringBuilder();
 
-
-    public MainPage(SimpMessagingTemplate template, BeepEventPublisher beepEventPublisher) {
+    public MainPage(SimpMessagingTemplate template, BeepEventPublisher beepEventPublisher, DBService dbService) {
         this.template = template;
         this.publisher = beepEventPublisher;
+        this.dbService = dbService;
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
         appender = (MapAppender) context.getLogger("ROOT").getAppender("map");
     }
@@ -80,17 +86,19 @@ public final class MainPage extends UI implements IBeep {
 //    }
 
     @Scheduled(cron = "*/1 * * * * * ")
-    private void logger() {
+    private void logger() throws SQLException {
         logString.setLength(0);
-        appender.getEventMap().forEach(l -> logString.append("\n").append(l));
-        this.access(() -> log.setValue(logString.toString()));
+        //appender.getEventMap().forEach(l -> logString.append("\n").append(l));
+        String text = "Список партийных товарищей:\n";
+        for (String user : dbService.getBeepUsers()) {
+            text += user + "\n";
+        }
+        String finalText = text;
+        this.access(() -> log.setValue(finalText));
        // publisher.publishEvent("yolo");
     }
 
-    // заставить слушать Beeep
-  //  @EventListener
     public void beepListerenPub(final BeepEvent event) {
-        System.out.println("123");
     }
 }
 

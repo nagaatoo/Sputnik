@@ -18,6 +18,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSocketMessageBroker
+//@Profile("cloud")
 public class WebConf implements WebSocketMessageBrokerConfigurer {
 
 //    private WebSockHandler handler;

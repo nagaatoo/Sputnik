@@ -13,7 +13,6 @@ public class BeepEventPublisher {
     }
 
     public void publishEvent(final String message) {
-        System.out.println("Publishing custom event. ");
         final BeepEvent customSpringEvent = new BeepEvent(this, message);
         applicationEventPublisher.publishEvent(customSpringEvent);
     }
